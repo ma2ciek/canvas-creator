@@ -1,0 +1,13 @@
+{
+    "name": "Heatmap",
+    "description": "Heatmap",
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-contrib-watch": "^0.6.1",
+        "grunt-contrib-concat": "^0.5.1",
+        "load-grunt-tasks": "^3.4.0",
+        "grunt-babel": "^6.0.0",
+        "babel-preset-es2015": "^6.3.13"
+    },
+    "dependencies": {}
+}
