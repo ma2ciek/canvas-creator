@@ -1,16 +1,16 @@
-import {Shape, IShapeOptions} from './Shape';
-import {IPoint} from './Point';
-import {IRect} from './Rectangle';
+import { Shape, IShapeOptions} from './Shape';
+import { IPoint } from './Point';
+import { IRect } from './Rectangle';
 
 const sqrt = Math.sqrt;
-const pow2 = x => Math.pow(x, 2);
+const pow2 = (x: number) => Math.pow(x, 2);
 
 export interface ICircleOptions extends IShapeOptions {
     radius: number;
 }
 
 export class Circle extends Shape implements ICircleOptions {
-    radius: number;
+    public radius: number;
 
     constructor(options: ICircleOptions) {
         super(options);
@@ -44,3 +44,5 @@ export class Circle extends Shape implements ICircleOptions {
         }
     }
 }
+
+export default Circle;

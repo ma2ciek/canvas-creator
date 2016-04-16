@@ -27,13 +27,7 @@ export default class DirtRect {
 
     public get(): IRect {
         this.normalizeValues();
-
-        return {
-            x: Math.max(this.minX, 0),
-            y: Math.max(this.minY, 0),
-            width: this.maxX - this.minX,
-            height: this.maxY - this.minY
-        };
+        return this.createRect();      
     }
 
     private normalizeValues() {
@@ -45,5 +39,14 @@ export default class DirtRect {
             this.maxX = 0;
         if (this.maxY == -Infinity)
             this.maxX = 0;
+    }
+    
+    private createRect() {
+        return {
+            x: Math.max(this.minX, 0),
+            y: Math.max(this.minY, 0),
+            width: this.maxX - this.minX,
+            height: this.maxY - this.minY
+        };
     }
 }

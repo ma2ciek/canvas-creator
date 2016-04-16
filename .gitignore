@@ -1,2 +1,5 @@
 /node_modules/
 output.js.map
+/build/
+/.vscode/
+/typings/

@@ -7,36 +7,34 @@ export interface IShapeOptions {
     y: number;
     color: string;
     draggable: boolean;
-    zIndex: number;
 }
 
 export class Shape implements IShapeOptions {
-    x: number;
-    y: number;
-    color: string;
-    draggable: boolean;
-    zIndex: number;
+    public x: number;
+    public y: number;
+    public color: string;
+    public draggable: boolean;
 
     constructor(params: IShapeOptions) {
         extend(this, params);
     }
-
-    move(p: IPoint) {
-        this.x = p.x;
-        this.y = p.y;
+    
+    public moveBy(p: IPoint) {
+        this.x += p.x;
+        this.y += p.y;
     }
 
-    getBoundingRect() {
+    public getBoundingRect() {
         new Error('you should override getBoundingRect method');
         return { x: 0, width: 0, y: 0, height: 0 }
     }
 
-    containsRect(rect: IRect) {
+    public containsRect(rect: IRect) {
         new Error('you should override containsRect method');
         return false;
     }
 
-    contains(p: IPoint) {
+    public contains(p: IPoint) {
         new Error('you should override contains method');
         return false;
     }

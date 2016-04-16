@@ -14,8 +14,8 @@ export interface IRectangleOptions extends IShapeOptions {
 }
 
 export class Rectangle extends Shape {
-    width: number;
-    height: number;
+    public width: number;
+    public height: number;
 
     constructor(options: IRectangleOptions) {
         super(options);
@@ -24,26 +24,26 @@ export class Rectangle extends Shape {
         this.height = options.height;
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    public draw(ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 
-    contains(p: IPoint) {
+    public contains(p: IPoint) {
         return this.x + this.width > p.x &&
             this.y + this.height > p.y &&
             this.x < p.x &&
             this.y < p.y;
     }
 
-    containsRect(rect: IRect) {
+    public containsRect(rect: IRect) {
         return this.x + this.width > rect.x &&
             this.y + this.height > rect.y &&
             this.x < rect.x + rect.width &&
             this.y < rect.y + rect.height;
     }
 
-    getBoundingRect() {
+    public getBoundingRect() {
         return <IRect> this;
     }
 }

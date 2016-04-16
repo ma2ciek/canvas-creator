@@ -1,4 +1,4 @@
-interface IDictionary {
+export interface IDictionary {
     [name: string]: any;
     [name: number]: any;
 }
