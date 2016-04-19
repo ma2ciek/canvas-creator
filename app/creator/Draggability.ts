@@ -19,12 +19,14 @@ export default class Draggability extends EventEmitter {
 
         canvasDragger.on('dragstart', (point: Point) => {
             this.active = getInstance(point);
-            this.active && this.onDrag(this.active);
-            mousePosition = point;            
+            this.active && this.beforeDrag(this.active);
+            mousePosition = point;
         });
 
         canvasDragger.on('dragging', (point: Point) => {
-            this.onDrag(this.active);
+            if (!this.active)
+                return;
+            this.beforeDrag(this.active);
             this.active.moveBy(point.getSubtract(mousePosition));
             this.afterDrag(this.active)
             mousePosition = point;
@@ -43,7 +45,7 @@ export default class Draggability extends EventEmitter {
         this.active = active;
     }
 
-    private onDrag(instance: Shape) {
+    private beforeDrag(instance: Shape) {
         this.emit('dirt', instance.getBoundingRect())
         this.emit('maybeBringToForward', instance);
     }

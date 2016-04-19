@@ -11,15 +11,17 @@ export interface IRect {
 export interface IRectangleOptions extends IShapeOptions {
     width: number;
     height: number;
+    color?: string;
 }
 
 export class Rectangle extends Shape {
     public width: number;
     public height: number;
+    public color: string;
 
     constructor(options: IRectangleOptions) {
         super(options);
-
+        this.color = options.color;
         this.width = options.width;
         this.height = options.height;
     }

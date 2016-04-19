@@ -1,24 +1,26 @@
 import { extend } from './util';
 import { IPoint } from './Point';
 import { IRect } from './Rectangle';
+import EventEmitter from './EventEmitter';
 
 export interface IShapeOptions {
     x: number;
     y: number;
-    color: string;
-    draggable: boolean;
+    draggable?: boolean;
 }
 
-export class Shape implements IShapeOptions {
+export class Shape extends EventEmitter implements IShapeOptions {
     public x: number;
     public y: number;
-    public color: string;
     public draggable: boolean;
 
-    constructor(params: IShapeOptions) {
-        extend(this, params);
+    constructor(options: IShapeOptions) {
+        super();
+        this.x = options.x;
+        this.y = options.y;
+        this.draggable = typeof options.draggable == 'boolean' ? options.draggable : true;
     }
-    
+
     public moveBy(p: IPoint) {
         this.x += p.x;
         this.y += p.y;

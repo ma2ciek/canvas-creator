@@ -6,7 +6,7 @@ import logger from './logger';
 import { log, seal, readonly } from './decorators';
 
 export interface IWorldConfig {
-    ontop: boolean;
+    ontop?: boolean;
 }
 
 export default class World {
@@ -16,25 +16,29 @@ export default class World {
     private objects: Shape[] = [];
     private worldPosition = new Point(0, 0);
 
-    constructor(private canvas: HTMLCanvasElement, config: IWorldConfig) {
+    constructor(private canvas: HTMLCanvasElement, config?: IWorldConfig) {
+        config = config || {};
         this.dirtRect = new DirtRect();
 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         this.ctx = canvas.getContext('2d');
-
-        var draggability = new Draggability(canvas, this.getObject.bind(this));
-
-        draggability.on('dirt', rect => this.dirtRect.add(rect));
-        draggability.on('maybeBringForward', object => {
-            config.ontop && this.bringObjectForward(object);
-        });
-        draggability.on('worldMove', p => this.moveWorld(p));
+        this.addDraggability(canvas, config.ontop);
 
         this.draw();
     }
-    
+
+    private addDraggability(canvas: HTMLCanvasElement, ontop: boolean) {
+        var draggability = new Draggability(canvas, this.getObject.bind(this));
+
+        draggability.on('dirt', rect => this.dirtRect.add(rect));
+        draggability.on('maybeBringToForward', object => {
+            ontop && this.bringObjectForward(object);
+        });
+        draggability.on('worldMove', p => this.moveWorld(p));
+    }
+
     @log
     private moveWorld(p: Point) {
         this.worldPosition.add(p);
@@ -45,7 +49,8 @@ export default class World {
         });
     }
     public add(object: Shape) {
-        this.objects.push(object)
+        this.objects.push(object);
+        object.on('loaded', () => this.dirtRect.add(object.getBoundingRect()))
         this.dirtRect.add(object.getBoundingRect());
     }
 
@@ -62,7 +67,6 @@ export default class World {
     }
 
     private draw() {
-        logger.frameStart('rendering');
         const rect = this.dirtRect.get();
 
         this.ctx.save();
@@ -78,12 +82,11 @@ export default class World {
         this.dirtRect.clear();
 
         requestAnimationFrame(() => this.draw());
-        logger.frameEnd('rendering');
     }
 
     private getObject(p: IPoint) {
-        for (var i = this.objects.length - 1; i >= 0; i--) {
-            var object = this.objects[i];
+        for (let i = this.objects.length - 1; i >= 0; i--) {
+            const object = this.objects[i];
             if (object.draggable && object.contains(p)) {
                 return object;
             }

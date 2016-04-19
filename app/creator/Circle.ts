@@ -7,14 +7,17 @@ const pow2 = (x: number) => Math.pow(x, 2);
 
 export interface ICircleOptions extends IShapeOptions {
     radius: number;
+    color: string;
 }
 
 export class Circle extends Shape implements ICircleOptions {
     public radius: number;
+    public color: string;
 
     constructor(options: ICircleOptions) {
         super(options);
         this.radius = options.radius;
+        this.color = options.color;
     }
     
     public draw(ctx: CanvasRenderingContext2D) {

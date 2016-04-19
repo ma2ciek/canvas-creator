@@ -2,6 +2,6 @@
 /.vscode/
 /typings/
 
-/app/**/*.js
-/app/**/*.js.map
+/app/creator/*.js
+/app/creator/*.js.map
 !/app/lib/**/*.js
