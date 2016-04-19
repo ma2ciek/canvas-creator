@@ -16,14 +16,14 @@ export class Circle extends Shape implements ICircleOptions {
         super(options);
         this.radius = options.radius;
     }
-
+    
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         ctx.fill();
     }
-
+    
     public contains(p: IPoint) {
         return pow2(this.x - p.x) + pow2(this.y - p.y) <= pow2(this.radius);
     }

@@ -5,7 +5,8 @@
         "declaration": true,
         "noImplicitAny": true,
         "removeComments": false,
-        "noLib": false
+        "noLib": false,
+        "experimentalDecorators": true
     },
     "exclude": [
         "node_modules",

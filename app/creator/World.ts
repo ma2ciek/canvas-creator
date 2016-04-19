@@ -2,16 +2,18 @@ import DirtRect from './DirtRect';
 import Shape from './Shape';
 import Draggability from './Draggability';
 import { IPoint, Point } from './Point';
+import logger from './logger';
+import { log, seal, readonly } from './descriptors';
 
 export interface IWorldConfig {
     ontop: boolean;
 }
 
 export default class World {
+    private ctx: CanvasRenderingContext2D;
 
     private dirtRect: DirtRect;
     private objects: Shape[] = [];
-    private ctx: CanvasRenderingContext2D;
     private worldPosition = new Point(0, 0);
 
     constructor(private canvas: HTMLCanvasElement, config: IWorldConfig) {
@@ -29,34 +31,39 @@ export default class World {
             config.ontop && this.bringObjectForward(object);
         });
         draggability.on('worldMove', p => this.moveWorld(p));
-        
+
         this.draw();
     }
     
+    @log
     private moveWorld(p: Point) {
         this.worldPosition.add(p);
         this.dirtRect.add({
-            x: 0,  y: 0,
+            x: 0, y: 0,
             width: this.canvas.width,
             height: this.canvas.height
         });
     }
-
     public add(object: Shape) {
         this.objects.push(object)
         this.dirtRect.add(object.getBoundingRect());
     }
-    
+
+    public renderAll() {
+        const c = this.canvas;
+        this.dirtRect.add({ x: 0, y: 0, width: c.width, height: c.height });
+    }
+
     // todo: not working?
     private bringObjectForward(object: Shape) {
-        var index = this.objects.indexOf(object);
+        const index = this.objects.indexOf(object);
         this.objects.splice(index, 1);
         this.objects.push(object);
     }
 
     private draw() {
-
-        var rect = this.dirtRect.get();
+        logger.frameStart('rendering');
+        const rect = this.dirtRect.get();
 
         this.ctx.save();
         this.ctx.beginPath();
@@ -71,6 +78,7 @@ export default class World {
         this.dirtRect.clear();
 
         requestAnimationFrame(() => this.draw());
+        logger.frameEnd('rendering');
     }
 
     private getObject(p: IPoint) {

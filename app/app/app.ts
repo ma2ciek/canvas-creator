@@ -1,4 +1,5 @@
 import * as creator from '../creator/Core';
+import logger from '../creator/logger';
 
 var canvas = <HTMLCanvasElement> document.querySelector('canvas');
 var world = new creator.World(canvas, {
@@ -10,7 +11,8 @@ var randomColor = () => {
     return `rgb( ${c()}, ${c()}, ${c()})`;
 }
 
-for (var i = 0; i < 1000; i++) {
+console.time('rendering all');
+for (var i = 0; i < 10000; i++) {
     var circle = new creator.Circle({
         x: Math.random() * canvas.width | 0,
         y: Math.random() * canvas.height | 0,
@@ -30,3 +32,7 @@ for (var i = 0; i < 1000; i++) {
     // });
     // world.add(rect);
 }
+console.timeEnd('rendering all');
+
+window.world = world;
+window.logger = logger;
