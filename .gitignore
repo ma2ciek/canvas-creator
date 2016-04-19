@@ -1,5 +1,7 @@
 /node_modules/
-output.js.map
-/build/
 /.vscode/
 /typings/
+
+/app/**/*.js
+/app/**/*.js.map
+!/app/lib/**/*.js

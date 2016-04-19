@@ -3,7 +3,7 @@ import Shape from './Shape';
 import Draggability from './Draggability';
 import { IPoint, Point } from './Point';
 import logger from './logger';
-import { log, seal, readonly } from './descriptors';
+import { log, seal, readonly } from './decorators';
 
 export interface IWorldConfig {
     ontop: boolean;
