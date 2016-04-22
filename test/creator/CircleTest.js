@@ -1,14 +1,15 @@
+/// <reference path="../../typings/main.d.ts" />
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../src/creator/Circle', 'assert'], factory);
+        define(["require", "exports", 'assert', '../../app/creator/shapes/Circle'], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Circle_1 = require('../../src/creator/Circle');
     var assert = require('assert');
+    var Circle_1 = require('../../app/creator/shapes/Circle');
     describe('Circle', function () {
         var circle;
         beforeEach(function () {

@@ -1,9 +1,9 @@
 import DirtRect from './DirtRect';
-import Shape from './Shape';
+import { IShape } from './shapes/Shape';
 import Draggability from './Draggability';
-import { IPoint, Point } from './Point';
-import logger from './logger';
-import { log, seal, readonly } from './decorators';
+import { IPoint, Point } from './utils/Point';
+import LayerManager from './LayerManager';
+import { log, seal, readonly } from './utils/decorators';
 
 export interface IWorldConfig {
     ontop?: boolean;
@@ -13,43 +13,41 @@ export default class World {
     private ctx: CanvasRenderingContext2D;
 
     private dirtRect: DirtRect;
-    private objects: Shape[] = [];
     private worldPosition = new Point(0, 0);
+    private layerManager: LayerManager;
+    private draggability: Draggability;
 
     constructor(private canvas: HTMLCanvasElement, config?: IWorldConfig) {
         config = config || {};
-        this.dirtRect = new DirtRect();
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        this.dirtRect = new DirtRect();        
 
         this.ctx = canvas.getContext('2d');
         this.addDraggability(canvas, config.ontop);
+        this.layerManager = new LayerManager();
 
-        this.draw();
+        window.addEventListener('resize', () => this.fixCanvasSize());
+        this.fixCanvasSize();
+        
+        this.draw();        
+    }
+    
+    private fixCanvasSize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        this.dirtRect.set(this.canvas.width, this.canvas.height)
     }
 
     private addDraggability(canvas: HTMLCanvasElement, ontop: boolean) {
-        var draggability = new Draggability(canvas, this.getObject.bind(this));
-
-        draggability.on('dirt', rect => this.dirtRect.add(rect));
-        draggability.on('maybeBringToForward', object => {
-            ontop && this.bringObjectForward(object);
-        });
-        draggability.on('worldMove', p => this.moveWorld(p));
-    }
-
-    @log
-    private moveWorld(p: Point) {
-        this.worldPosition.add(p);
-        this.dirtRect.add({
-            x: 0, y: 0,
-            width: this.canvas.width,
-            height: this.canvas.height
+        this.draggability = new Draggability(canvas, this.getObject.bind(this));
+        this.draggability.on('dirt', rect => this.dirtRect.add(rect));
+        this.draggability.on('maybeBringToForward', object => {
+            ontop && this.layerManager.bringObjectForward(object);
         });
     }
-    public add(object: Shape) {
-        this.objects.push(object);
+
+    public add(object: IShape, position?: number) {
+        this.layerManager.add(object, position);
         object.on('loaded', () => this.dirtRect.add(object.getBoundingRect()))
         this.dirtRect.add(object.getBoundingRect());
     }
@@ -57,13 +55,6 @@ export default class World {
     public renderAll() {
         const c = this.canvas;
         this.dirtRect.add({ x: 0, y: 0, width: c.width, height: c.height });
-    }
-
-    // todo: not working?
-    private bringObjectForward(object: Shape) {
-        const index = this.objects.indexOf(object);
-        this.objects.splice(index, 1);
-        this.objects.push(object);
     }
 
     private draw() {
@@ -75,7 +66,7 @@ export default class World {
         this.ctx.clip();
         this.ctx.clearRect(rect.x, rect.y, rect.width, rect.height);
 
-        this.objects.forEach(i =>
+        this.layerManager.each((i: IShape) =>
             i.containsRect(this.dirtRect.get()) && i.draw(this.ctx));
 
         this.ctx.restore();
@@ -85,12 +76,14 @@ export default class World {
     }
 
     private getObject(p: IPoint) {
-        for (let i = this.objects.length - 1; i >= 0; i--) {
-            const object = this.objects[i];
+        let result: IShape = null;
+        this.layerManager.each((object: IShape) => {
             if (object.draggable && object.contains(p)) {
-                return object;
+                result = object;
+                return;
             }
-        }
-        return null;
+        });
+        return result;
     }
+
 }

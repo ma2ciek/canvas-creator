@@ -1,16 +1,16 @@
-import Shape from './Shape';
-import EventEmitter from './EventEmitter';
-import Point from './Point';
+import { IShape } from './shapes/Shape';
+import EventEmitter from './utils/EventEmitter';
+import Point from './utils/Point';
 import CanvasDragger from './CanvasDragger';
 
 export default class Draggability extends EventEmitter {
 
-    private active: Shape;
+    private active: IShape;
     private canvasDragger: CanvasDragger;
 
     constructor(
         canvas: HTMLCanvasElement,
-        getInstance: (p: Point) => Shape
+        getInstance: (p: Point) => IShape
     ) {
         super();
 
@@ -28,7 +28,7 @@ export default class Draggability extends EventEmitter {
                 return;
             this.beforeDrag(this.active);
             this.active.moveBy(point.getSubtract(mousePosition));
-            this.afterDrag(this.active)
+            this.afterDrag(this.active);
             mousePosition = point;
         });
 
@@ -41,16 +41,16 @@ export default class Draggability extends EventEmitter {
         return this.active;
     }
 
-    public setActive(active: Shape) {
+    public setActive(active: IShape) {
         this.active = active;
     }
 
-    private beforeDrag(instance: Shape) {
+    private beforeDrag(instance: IShape) {
         this.emit('dirt', instance.getBoundingRect())
         this.emit('maybeBringToForward', instance);
     }
 
-    private afterDrag(instance: Shape) {
+    private afterDrag(instance: IShape) {
         this.emit('dirt', instance.getBoundingRect())
     }
 }

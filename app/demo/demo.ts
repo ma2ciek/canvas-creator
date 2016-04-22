@@ -1,5 +1,5 @@
 import * as creator from '../creator/Core';
-import logger from '../creator/logger';
+import logger from '../creator/utils/logger';
 
 var canvas = <HTMLCanvasElement>document.querySelector('canvas');
 var world = new creator.World(canvas);
@@ -9,7 +9,7 @@ var randomColor = () => {
     return `rgb( ${c()}, ${c()}, ${c()})`;
 }
 
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < 100; i++) {
     // var circle = new creator.Circle({
     //     x: Math.random() * canvas.width | 0,
     //     y: Math.random() * canvas.height | 0,
@@ -30,17 +30,19 @@ for (var i = 0; i < 10; i++) {
     // world.add(rect);
 
     world.add(new creator.Image({
-        src: 'app/app/img/tapeta.jpg',
+        src: 'app/demo/img/tapeta.jpg',
         x: Math.random() * canvas.width | 0,
         y: Math.random() * canvas.height | 0,
         width: 100,
         height: 80
     }));
     world.add(new creator.Image({
-        src: 'app/app/img/tapeta2.jpg',
+        src: 'app/demo/img/tapeta2.jpg',
         x: Math.random() * canvas.width | 0,
         y: Math.random() * canvas.height | 0,
         width: 100,
         height: 80
     }));
 }
+
+window.world = world;

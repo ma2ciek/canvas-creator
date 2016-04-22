@@ -1,4 +1,4 @@
-import { IRect } from './Rectangle';
+import { IRect } from './shapes/Rectangle';
 
 export default class DirtRect {
 
@@ -7,7 +7,17 @@ export default class DirtRect {
     private minY: number;
     private maxY: number;
 
+    private rect: IRect;
+
     constructor() {
+        this.clear();
+    }
+
+    public set(width: number, height: number) {
+        this.rect = {
+            width, height,
+            x: 0, y: 0
+        };
         this.clear();
     }
 
@@ -27,24 +37,20 @@ export default class DirtRect {
 
     public get(): IRect {
         this.normalizeValues();
-        return this.createRect();      
+        return this.createRect();
     }
 
     private normalizeValues() {
-        if (this.minX == Infinity)
-            this.minX = 0;
-        if (this.minY == Infinity)
-            this.minY = 0;
-        if (this.maxX == -Infinity)
-            this.maxX = 0;
-        if (this.maxY == -Infinity)
-            this.maxX = 0;
+        this.minX = Math.max(this.minX, this.rect.x);
+        this.minY = Math.max(this.minY, this.rect.y);
+        this.maxX = Math.min(this.maxX, this.rect.x + this.rect.width);
+        this.maxY = Math.min(this.maxY, this.rect.y + this.rect.height);
     }
-    
+
     private createRect() {
         return {
-            x: Math.max(this.minX, 0),
-            y: Math.max(this.minY, 0),
+            x: this.minX,
+            y: this.minY,
             width: this.maxX - this.minX,
             height: this.maxY - this.minY
         };

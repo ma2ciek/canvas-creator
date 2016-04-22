@@ -1,5 +1,5 @@
-import { Shape, IShapeOptions} from './Shape';
-import { IPoint } from './Point';
+import { Shape, IShape, IShapeOptions} from './Shape';
+import { IPoint } from '../utils/Point';
 import { IRect } from './Rectangle';
 
 const sqrt = Math.sqrt;
@@ -10,7 +10,7 @@ export interface ICircleOptions extends IShapeOptions {
     color: string;
 }
 
-export class Circle extends Shape implements ICircleOptions {
+export default class Circle extends Shape implements IShape {
     public radius: number;
     public color: string;
 
@@ -39,6 +39,7 @@ export class Circle extends Shape implements ICircleOptions {
     }
 
     public getBoundingRect() {
+        
         return {
             x: this.x - this.radius,
             y: this.y - this.radius,
@@ -47,5 +48,3 @@ export class Circle extends Shape implements ICircleOptions {
         }
     }
 }
-
-export default Circle;

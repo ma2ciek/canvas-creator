@@ -1,5 +1,5 @@
-import { Shape, IShapeOptions} from './Shape';
-import { IPoint } from './Point';
+import { Shape, IShape, IShapeOptions} from './Shape';
+import { IPoint } from './utils/Point';
 
 export interface IRect {
     x: number;
@@ -14,7 +14,7 @@ export interface IRectangleOptions extends IShapeOptions {
     color?: string;
 }
 
-export class Rectangle extends Shape {
+export class Rectangle extends Shape implements IShape {
     public width: number;
     public height: number;
     public color: string;

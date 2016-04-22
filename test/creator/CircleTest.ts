@@ -1,13 +1,15 @@
 
-import Circle from '../../src/creator/Circle';
-import * as mocha from 'mocha';
-import * as assert from 'assert';
+/// <reference path="../../typings/main.d.ts" />
 
-describe('Circle', function() {
-    
+import mocha = require('mocha');
+import assert = require('assert');
+import Circle from '../../app/creator/shapes/Circle';
+
+describe('Circle', function () {
+
     var circle: Circle;
-    
-    beforeEach(function() {
+
+    beforeEach(function () {
         circle = new Circle({
             x: 30,
             y: 10,
@@ -16,8 +18,9 @@ describe('Circle', function() {
             draggable: true
         });
     });
-    
-    it('#constructor()', function() {
+
+    it('#constructor()', function () {
         assert.equal(circle.x, 30);
     });
 });
+

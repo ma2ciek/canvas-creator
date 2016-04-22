@@ -1,6 +1,6 @@
 import Draggability from './Draggability';
-import EventEmitter from './EventEmitter';
-import Point from './Point';
+import EventEmitter from './utils/EventEmitter';
+import Point from './utils/Point';
 
 export default class CanvasDragger extends EventEmitter {
 
@@ -42,3 +42,4 @@ export default class CanvasDragger extends EventEmitter {
         this.emit('dragstart', new Point(e.clientX, e.clientY));
     }
 }
+
