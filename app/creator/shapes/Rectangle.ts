@@ -21,7 +21,7 @@ export class Rectangle extends Shape implements IShape {
 
     constructor(options: IRectangleOptions) {
         super(options);
-        this.color = options.color;
+        this.color = options.color || '#EEE';
         this.width = options.width;
         this.height = options.height;
     }

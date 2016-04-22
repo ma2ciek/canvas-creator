@@ -13,7 +13,6 @@ export default class World {
     private ctx: CanvasRenderingContext2D;
 
     private dirtRect: DirtRect;
-    private worldPosition = new Point(0, 0);
     private layerManager: LayerManager;
     private draggability: Draggability;
 
@@ -53,8 +52,7 @@ export default class World {
     }
 
     public renderAll() {
-        const c = this.canvas;
-        this.dirtRect.add({ x: 0, y: 0, width: c.width, height: c.height });
+        this.dirtRect.dirtAll();
     }
 
     private draw() {

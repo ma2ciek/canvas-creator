@@ -9,7 +9,7 @@ var randomColor = () => {
     return `rgb( ${c()}, ${c()}, ${c()})`;
 }
 
-for (var i = 0; i < 100; i++) {
+for (var i = 0; i < 10; i++) {
     // var circle = new creator.Circle({
     //     x: Math.random() * canvas.width | 0,
     //     y: Math.random() * canvas.height | 0,
@@ -29,19 +29,12 @@ for (var i = 0; i < 100; i++) {
     // });
     // world.add(rect);
 
-    world.add(new creator.Image({
+    world.add(new creator.Cell({
         src: 'app/demo/img/tapeta.jpg',
         x: Math.random() * canvas.width | 0,
         y: Math.random() * canvas.height | 0,
         width: 100,
-        height: 80
-    }));
-    world.add(new creator.Image({
-        src: 'app/demo/img/tapeta2.jpg',
-        x: Math.random() * canvas.width | 0,
-        y: Math.random() * canvas.height | 0,
-        width: 100,
-        height: 80
+        height: 100
     }));
 }
 

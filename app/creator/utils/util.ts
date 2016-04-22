@@ -13,6 +13,22 @@ export function extend(dest: any, ...sources: IDictionary[]) {
     }
 };
 
+export interface IImageCallback {
+    (img: HTMLImageElement): any;
+}
+
+export function createImage(src: string, callback: IImageCallback) {
+    var img = new Image();
+    img.onload = () => callback(img)
+    img.onerror = () => {
+        console.error('cannot load image: ', src);
+        callback(img);
+    }
+    img.src = src;    
+    return img;
+}
+
 export default {
-    extend
+    extend,
+    createImage
 };

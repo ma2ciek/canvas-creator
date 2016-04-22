@@ -1,6 +1,7 @@
 import { IRect} from './Rectangle';
 import { Shape, IShape, IShapeOptions} from './Shape';
 import { IPoint } from '../utils/Point';
+import util from '../utils/util';
 
 export interface IImageOptions extends IShapeOptions {
     width?: number;
@@ -8,9 +9,11 @@ export interface IImageOptions extends IShapeOptions {
     src: string;
 }
 
-export class _Image extends Shape implements IShape {
+export interface IImage extends IShape, IImageOptions { }
+
+export default class _Image extends Shape implements IImage {
     public src: string;
-    public el: HTMLImageElement;
+    private el: HTMLImageElement;
 
     constructor(options: IImageOptions) {
         super(options);
@@ -20,9 +23,7 @@ export class _Image extends Shape implements IShape {
     }
 
     private initialize(): void {
-        this.el = new Image();
-        this.el.onload = () => setTimeout(() => this.emit('loaded'));
-        this.el.src = this.src;
+        this.el = util.createImage(this.src, () => this.emit('loaded'))
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
@@ -55,5 +56,3 @@ export class _Image extends Shape implements IShape {
         };
     }
 }
-
-export default _Image;

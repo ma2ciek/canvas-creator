@@ -1,12 +1,10 @@
 import { IRect } from './shapes/Rectangle';
 
 export default class DirtRect {
-
     private minX: number;
     private maxX: number;
     private minY: number;
     private maxY: number;
-
     private rect: IRect;
 
     constructor() {
@@ -18,7 +16,11 @@ export default class DirtRect {
             width, height,
             x: 0, y: 0
         };
-        this.clear();
+        this.dirtAll();
+    }
+    
+    public dirtAll() {
+        this.add(this.rect);
     }
 
     public add(params: IRect) {
