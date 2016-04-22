@@ -23,7 +23,7 @@ export default class _Image extends Shape implements IImage {
     }
 
     private initialize(): void {
-        this.el = util.createImage(this.src, () => this.emit('loaded'))
+        this.el = util.createImage(this.src, () => this.emit('dirt'))
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

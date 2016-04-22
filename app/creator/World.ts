@@ -3,7 +3,6 @@ import { IShape } from './shapes/Shape';
 import Draggability from './Draggability';
 import { IPoint, Point } from './utils/Point';
 import LayerManager from './LayerManager';
-import { log, seal, readonly } from './utils/decorators';
 
 export interface IWorldConfig {
     ontop?: boolean;
@@ -16,13 +15,12 @@ export default class World {
     private layerManager: LayerManager;
     private draggability: Draggability;
 
-    constructor(private canvas: HTMLCanvasElement, config?: IWorldConfig) {
-        config = config || {};
+    constructor(private canvas: HTMLCanvasElement) {
 
         this.dirtRect = new DirtRect();        
 
         this.ctx = canvas.getContext('2d');
-        this.addDraggability(canvas, config.ontop);
+        this.addDraggability(canvas);
         this.layerManager = new LayerManager();
 
         window.addEventListener('resize', () => this.fixCanvasSize());
@@ -37,17 +35,14 @@ export default class World {
         this.dirtRect.set(this.canvas.width, this.canvas.height)
     }
 
-    private addDraggability(canvas: HTMLCanvasElement, ontop: boolean) {
+    private addDraggability(canvas: HTMLCanvasElement) {
         this.draggability = new Draggability(canvas, this.getObject.bind(this));
         this.draggability.on('dirt', rect => this.dirtRect.add(rect));
-        this.draggability.on('maybeBringToForward', object => {
-            ontop && this.layerManager.bringObjectForward(object);
-        });
     }
 
     public add(object: IShape, position?: number) {
         this.layerManager.add(object, position);
-        object.on('loaded', () => this.dirtRect.add(object.getBoundingRect()))
+        object.on('dirt', () => this.dirtRect.add(object.getBoundingRect()))
         this.dirtRect.add(object.getBoundingRect());
     }
 

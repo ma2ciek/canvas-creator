@@ -6,35 +6,17 @@ import CanvasDragger from './CanvasDragger';
 export default class Draggability extends EventEmitter {
 
     private active: IShape;
-    private canvasDragger: CanvasDragger;
+    private mousePosition: Point;
 
     constructor(
         canvas: HTMLCanvasElement,
-        getInstance: (p: Point) => IShape
+        private getInstance: (p: Point) => IShape
     ) {
         super();
-
-        const canvasDragger = new CanvasDragger(canvas);
-        let mousePosition: Point;
-
-        canvasDragger.on('dragstart', (point: Point) => {
-            this.active = getInstance(point);
-            this.active && this.beforeDrag(this.active);
-            mousePosition = point;
-        });
-
-        canvasDragger.on('dragging', (point: Point) => {
-            if (!this.active)
-                return;
-            this.beforeDrag(this.active);
-            this.active.moveBy(point.getSubtract(mousePosition));
-            this.afterDrag(this.active);
-            mousePosition = point;
-        });
-
-        canvasDragger.on('drop', (point: Point) => {
-            this.active = null;
-        });
+        var canvasDragger = new CanvasDragger(canvas);
+        canvasDragger.on('dragstart', this.onDragStart.bind(this));
+        canvasDragger.on('dragging', this.onDragging.bind(this));
+        canvasDragger.on('drop', this.onDrop.bind(this));
     }
 
     public getAvtive() {
@@ -45,13 +27,39 @@ export default class Draggability extends EventEmitter {
         this.active = active;
     }
 
-    private beforeDrag(instance: IShape) {
-        this.emit('dirt', instance.getBoundingRect())
-        this.emit('maybeBringToForward', instance);
+    private onDragStart(point: Point, e: MouseEvent) {
+        this.active = this.getInstance(point);
+        this.mousePosition = point;
+
+        if (!this.active)
+            return;
+
+        this.isSpecial(e) ?
+            this.active.emit('dragstart', point) :
+            this.emit('dirt', this.active.getBoundingRect());
     }
 
-    private afterDrag(instance: IShape) {
-        this.emit('dirt', instance.getBoundingRect())
+    private onDragging(point: Point, e: MouseEvent) {
+        if (!this.active)
+            return;
+
+        if (this.isSpecial(e))
+            this.active.emit('dragging', point);
+        else {
+            this.emit('dirt', this.active.getBoundingRect());
+            this.active.moveBy(point.getSubtract(this.mousePosition));
+            this.emit('dirt', this.active.getBoundingRect());
+            this.mousePosition = point;
+        }
+    }
+
+    private onDrop(point: Point, e: MouseEvent) {
+        this.isSpecial(e) && this.active ?
+            this.active.emit('drop', point) :
+            this.active = null;
+    }
+    
+    private isSpecial(e: MouseEvent): boolean {
+        return e.which == 3;
     }
 }
-

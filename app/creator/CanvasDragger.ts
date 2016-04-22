@@ -1,45 +1,54 @@
-import Draggability from './Draggability';
 import EventEmitter from './utils/EventEmitter';
 import Point from './utils/Point';
 
+interface IMouseCallbacks {
+    [name: string]: IMouseCallback
+}
+
+interface IMouseCallback {
+    (e: MouseEvent): void;
+}
+
 export default class CanvasDragger extends EventEmitter {
-
     private mouseDown = false;
+    private eventListeners: IMouseCallbacks = {
+        mousedown: this.onDragStart,
+        mouseup: this.onDrop,
+        mousemove: this.onDragging,
+        mouseout: this.onDrop,
+        contextmenu: this.preventDefault,
+    };
 
-    constructor(private canvas: HTMLCanvasElement) {
+    constructor(private container: HTMLCanvasElement) {
         super();
         this.addEventListeners();
     }
 
     private addEventListeners() {
-        this.canvas.addEventListener('mousedown', e => e.which == 1 && this.onMouseDown(e));
-        this.canvas.addEventListener('mouseup', e => e.which == 1 && this.onMouseUp(e));
-        this.canvas.addEventListener('mousemove', e => e.which == 1 && this.onMouseMove(e));
-        this.canvas.addEventListener('mouseout', e => e.which == 1 && this.onMouseOut(e));
-        this.canvas.addEventListener('contextmenu', e => e.preventDefault());
-    }
-
-    private onMouseUp(e: MouseEvent) {
-        if (this.mouseDown)
-            this.emit('drop', new Point(e.clientX, e.clientY));
-        this.mouseDown = false;
-    }
-
-    private onMouseOut(e: MouseEvent) {
-        if (this.mouseDown)
-            this.emit('drop', new Point(e.clientX, e.clientY));
-        this.mouseDown = false;
-    }
-
-    private onMouseMove(e: MouseEvent) {
-        if (this.mouseDown) {
-            this.emit('dragging', new Point(e.clientX, e.clientY));
+        const ael = this.container.addEventListener;
+        for (var eventName in this.eventListeners) {
+            const handler = this.eventListeners[eventName];
+            ael(eventName, e => handler.call(this, e));
         }
     }
 
-    private onMouseDown(e: MouseEvent) {
+    private onDrop(e: MouseEvent) {
+        if (this.mouseDown)
+            this.emit('drop', new Point(e.clientX, e.clientY), e);
+        this.mouseDown = false;
+    }
+
+    private onDragging(e: MouseEvent) {
+        if (this.mouseDown)
+            this.emit('dragging', new Point(e.clientX, e.clientY), e);
+    }
+
+    private onDragStart(e: MouseEvent) {
         this.mouseDown = true;
-        this.emit('dragstart', new Point(e.clientX, e.clientY));
+        this.emit('dragstart', new Point(e.clientX, e.clientY), e);
+    }
+
+    private preventDefault(e: MouseEvent) {
+        e.preventDefault();
     }
 }
-

@@ -33,9 +33,16 @@ for (var i = 0; i < 10; i++) {
         src: 'app/demo/img/tapeta.jpg',
         x: Math.random() * canvas.width | 0,
         y: Math.random() * canvas.height | 0,
-        width: 100,
-        height: 100
+        width: 300,
+        height: 300
+    }));
+    
+    world.add(new creator.Cell({
+        mask: creator.CircleMask,
+        src: 'app/demo/img/tapeta2.jpg',
+        x: Math.random() * canvas.width | 0,
+        y: Math.random() * canvas.height | 0,
+        width: 300,
+        height: 300
     }));
 }
-
-window.world = world;

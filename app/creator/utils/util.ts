@@ -24,11 +24,16 @@ export function createImage(src: string, callback: IImageCallback) {
         console.error('cannot load image: ', src);
         callback(img);
     }
-    img.src = src;    
+    img.src = src;
     return img;
 }
 
+export function normalize(value: number, min: number, max: number): number {
+    return Math.min(Math.max(value, min), max);
+}
+
 export default {
+    normalize,
     extend,
     createImage
 };

@@ -1,61 +1,83 @@
-import { Shape, IShape } from './Shape';
-import { IPoint } from '../utils/Point';
-import { IRect, Rectangle, IRectangleOptions } from './Rectangle';
+import { IShape } from './Shape';
+import Point from '../utils/Point';
+import { Rectangle, IRectangleOptions } from './Rectangle';
 import util from '../utils/util';
+import { IDictionary } from '../utils/util';
+import CanvasDragger from './CanvasDragger'
+import CircleMask from './CircleMask';
 
 export interface ICellOptions extends IRectangleOptions {
     src: string;
-} 
+    mask?: IMask;
+}
+
+export interface IMask {
+    start(ctx: CanvasRenderingContext2D, config: IDictionary): void;
+    end(ctx: CanvasRenderingContext2D): void;
+}
 
 export interface ICell extends IShape { }
 
-export default class Cell extends Rectangle implements ICell {
+export class Cell extends Rectangle implements ICell {
     public src: string;
-    public offsetLeft = 0;
-    public offsetTop = 0;
-    
-    private el: HTMLImageElement;
+    protected el: HTMLImageElement;
+
+    private mask: IMask;
+    private offset = new Point(0, 0);
+    private startPoint: Point;
 
     constructor(options: ICellOptions) {
         super(options);
-        
+
+        this.mask = options.mask;
         this.src = options.src;
         this.initialize();
     }
-    
+
     private initialize(): void {
-        this.el = util.createImage(this.src, () => this.emit('loaded'))
+        this.el = util.createImage(this.src, () => this.emit('dirt'))
+        this.on('dragstart', this.dragStart.bind(this));
+        this.on('dragging', this.move.bind(this));
+        this.on('drop', this.correctOffset.bind(this));
+    }
+
+    private dragStart(point: Point, e: MouseEvent) {
+        this.startPoint = point;
+    }
+
+    private move(point: Point) {
+        this.offset.add(this.startPoint.getSubtract(point))
+        this.startPoint = point;
+        this.emit('dirt');
+    }
+
+    private correctOffset() {
+        this.offset.x = util.normalize(this.offset.x, 0, this.el.width - this.width)
+        this.offset.y = util.normalize(this.offset.y, 0, this.el.height - this.height)
+        this.emit('dirt');
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
         if (!this.el.width)
             return;
-            
-        ctx.drawImage(this.el, 
-            this.offsetLeft, this.offsetTop, this.width, this.height, 
+
+        this.mask && this.mask.start(ctx, {
+            x: this.x + this.width / 2,
+            y: this.y + this.height / 2,
+            r: Math.min(this.width / 2, this.height / 2)
+        });
+
+        ctx.drawImage(this.el,
+            this.offset.x, this.offset.y, this.width, this.height,
             this.x, this.y, this.width, this.height);
-    }
-    
-    public contains(p: IPoint): boolean {
-        return this.x + this.width > p.x &&
-            this.y + this.height > p.y &&
-            this.x < p.x &&
-            this.y < p.y;
+
+        this.mask && this.mask.end(ctx);
     }
 
-    public containsRect(rect: IRect): boolean {
-        return this.x + this.width > rect.x &&
-            this.y + this.height > rect.y &&
-            this.x < rect.x + rect.width &&
-            this.y < rect.y + rect.height;
-    }
-    
-    public getBoundingRect(): IRect {
-        return {
-            x: this.x,
-            y: this.y,
-            width: this.width,
-            height: this.height
-        };
+    public addImage(src: string) {
+        this.src = src;
+        this.el = util.createImage(src, () => this.emit('dirt'));
     }
 }
+
+export default Cell;
