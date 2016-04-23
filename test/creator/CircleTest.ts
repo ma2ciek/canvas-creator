@@ -1,12 +1,9 @@
-
 /// <reference path="../../typings/main.d.ts" />
-
-import mocha = require('mocha');
 import assert = require('assert');
+import mocha = require('mocha');
 import Circle from '../../app/creator/shapes/Circle';
 
 describe('Circle', function () {
-
     var circle: Circle;
 
     beforeEach(function () {

@@ -3,11 +3,11 @@ import _Circle from './shapes/Circle';
 import _Rectangle from './shapes/Rectangle';
 import _Image from './shapes/Image';
 import _Cell from './shapes/Cell';
-import _CircleMask from './shapes/CircleMask';
+import { circleMask as _circleMask } from './shapes/mask';
 
-export var World = _World;
-export var Circle = _Circle;
-export var Rectangle = _Rectangle;
-export var Image = _Image;
-export var Cell = _Cell;
-export var CircleMask = _CircleMask;
+export const World = _World;
+export const Circle = _Circle;
+export const Rectangle = _Rectangle;
+export const Image = _Image;
+export const Cell = _Cell;
+export const circleMask = _circleMask;

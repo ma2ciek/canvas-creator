@@ -38,7 +38,7 @@ for (var i = 0; i < 10; i++) {
     }));
     
     world.add(new creator.Cell({
-        mask: creator.CircleMask,
+        mask: creator.circleMask,
         src: 'app/demo/img/tapeta2.jpg',
         x: Math.random() * canvas.width | 0,
         y: Math.random() * canvas.height | 0,

@@ -2,18 +2,12 @@ import { IShape } from './Shape';
 import Point from '../utils/Point';
 import { Rectangle, IRectangleOptions } from './Rectangle';
 import util from '../utils/util';
-import { IDictionary } from '../utils/util';
 import CanvasDragger from './CanvasDragger'
-import CircleMask from './CircleMask';
+import { IMask } from './mask';
 
 export interface ICellOptions extends IRectangleOptions {
     src: string;
     mask?: IMask;
-}
-
-export interface IMask {
-    start(ctx: CanvasRenderingContext2D, config: IDictionary): void;
-    end(ctx: CanvasRenderingContext2D): void;
 }
 
 export interface ICell extends IShape { }
@@ -61,7 +55,7 @@ export class Cell extends Rectangle implements ICell {
         if (!this.el.width)
             return;
 
-        this.mask && this.mask.start(ctx, {
+        this.mask && this.mask(ctx, {
             x: this.x + this.width / 2,
             y: this.y + this.height / 2,
             r: Math.min(this.width / 2, this.height / 2)
@@ -71,7 +65,8 @@ export class Cell extends Rectangle implements ICell {
             this.offset.x, this.offset.y, this.width, this.height,
             this.x, this.y, this.width, this.height);
 
-        this.mask && this.mask.end(ctx);
+
+        this.mask && ctx.restore();
     }
 
     public addImage(src: string) {
