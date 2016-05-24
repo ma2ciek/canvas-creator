@@ -3,43 +3,37 @@
 const gulp = require('gulp');
 const del = require('del');
 const ts = require('gulp-typescript');
-const livereload = require('gulp-livereload');
 const mocha = require('gulp-mocha');
 const typescript = require('typescript');
-const tsProject = ts.createProject('tsconfig.json');
 
-gulp.task('default', ['ts', 'lib']);
+const tsProject = ts.createProject('tsconfig.json', {
 
-gulp.task('ts', ['clean'], () =>
-    gulp.src('app/**/*.ts')
-        .pipe(ts(tsProject))
-        .pipe(gulp.dest('app'))
-        .pipe(livereload({ port: 8001 }))
-);
-
-gulp.task('lib', ['clean'], () =>
-    gulp.src('./node_modules/requirejs/require.js')
-        .pipe(gulp.dest('./app/lib')));
-
-gulp.task('clean', () => del('app/**/*.js'));
-
-gulp.task('watch', () => {
-    livereload.listen();
-    gulp.watch('app/**/*.ts', ['default']);
-    gulp.watch('test/**/*.ts', ['compileTests'])
 });
 
-gulp.task('unit', () =>
-    gulp.src('test/**/*.js')
+gulp.task('default', ['test'], () => {
+    gulp.watch('app/**/*.ts', ['test']);
+});
+
+gulp.task('test', ['build'], () =>
+    gulp.src('dist/**/*-spec.js')
         .pipe(mocha({
             reporter: 'nyan',
             clearRequireCache: true,
             ignoreLeaks: true
         }))
-)
+);
 
-gulp.task('compileTests', () =>
-    gulp.src('test/**/*.ts')
+gulp.task('build', ['ts', 'lib']);
+
+gulp.task('ts', ['clean'], () =>
+    gulp.src(['app/**/*.ts', 'typings/index.d.ts', "declarations/**/*.d.ts"])
         .pipe(ts(tsProject))
-        .pipe(gulp.dest('./test'))
-)
+        .pipe(gulp.dest('dist'))
+);
+
+gulp.task('lib', ['clean'], () =>
+    gulp.src('./node_modules/requirejs/require.js')
+        .pipe(gulp.dest('dist/lib'))
+);
+
+gulp.task('clean', () => del('dist/**/**'));

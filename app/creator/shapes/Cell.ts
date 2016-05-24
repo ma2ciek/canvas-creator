@@ -2,7 +2,7 @@ import { IShape } from './Shape';
 import Point from '../utils/Point';
 import { Rectangle, IRectangleOptions } from './Rectangle';
 import util from '../utils/util';
-import CanvasDragger from './CanvasDragger'
+import CanvasDragger from '../CanvasDragger'
 import { IMask } from './mask';
 
 export interface ICellOptions extends IRectangleOptions {

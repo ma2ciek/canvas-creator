@@ -2,7 +2,10 @@ import * as creator from '../creator/Core';
 import logger from '../creator/utils/logger';
 
 var canvas = <HTMLCanvasElement>document.querySelector('canvas');
-var world = new creator.World(canvas);
+var world = new creator.World(canvas, {
+    autoResize: true,
+    mapMove: true
+});
 
 var randomColor = () => {
     var c = () => Math.random() * 256 | 0;
@@ -34,15 +37,7 @@ for (var i = 0; i < 10; i++) {
         x: Math.random() * canvas.width | 0,
         y: Math.random() * canvas.height | 0,
         width: 300,
-        height: 300
-    }));
-    
-    world.add(new creator.Cell({
-        mask: creator.circleMask,
-        src: 'app/demo/img/tapeta2.jpg',
-        x: Math.random() * canvas.width | 0,
-        y: Math.random() * canvas.height | 0,
-        width: 300,
-        height: 300
+        height: 300,
+        draggable: true
     }));
 }
