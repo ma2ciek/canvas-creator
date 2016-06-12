@@ -29,4 +29,5 @@ server.register(require('inert'), (err) => {
 
 server.start((err) => {
     handleIfError(err);    
+    console.log('port: 9000');
 });

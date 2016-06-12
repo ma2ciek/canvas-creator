@@ -1,12 +1,12 @@
-import DirtyRect from './DirtyRect';
-import { IShape } from './shapes/Shape';
-import Draggability from './Draggability';
-import { Point, IPoint } from './utils/Point';
-import LayerManager from './LayerManager';
-import EventEmitter from './utils/EventEmitter';
-import Cursor from './Cursor';
-import MapMove from './MapMove';
 import CanvasPosition from './CanvasPosition';
+import Cursor from './Cursor';
+import DirtyRect from './DirtyRect';
+import Draggability from './Draggability';
+import EventEmitter from './utils/EventEmitter';
+import LayerManager from './LayerManager';
+import MapMove from './MapMove';
+import { IPoint } from './utils/Point';
+import { IShape } from './shapes/Shape';
 
 export interface IWorldConfig {
     centralized?: boolean;
@@ -118,8 +118,16 @@ export default class World extends EventEmitter<any> {
         });
         return result;
     }
-    
+
     public item(x: number): IShape {
         return this.layerManager.get(x);
+    }
+
+    public getObjects() {
+        return this.layerManager.getObjects();
+    }
+
+    public getCurrentDirtyRect() {
+        return this.dirtyRect.get();
     }
 }

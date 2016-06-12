@@ -1,7 +1,4 @@
 /node_modules/
 /.vscode/
 /typings/
-
-/app/creator/**/*.js
-/app/creator/**/*.js.map
-/app/demo/**/*.js
+/dist/

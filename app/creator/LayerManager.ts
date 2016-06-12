@@ -24,4 +24,8 @@ export default class LayerManager {
     public get(index: number) {
         return this.layers[index];
     }
+    
+    public getObjects() {
+        return this.layers;
+    }
 }

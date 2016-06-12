@@ -33,17 +33,17 @@ export class Rectangle extends Shape implements IShape {
     }
 
     public contains(p: IPoint) {
-        return this.x + this.width > p.x &&
-            this.y + this.height > p.y &&
-            this.x < p.x &&
-            this.y < p.y;
+        return this.x + this.width >= p.x &&
+            this.y + this.height >= p.y &&
+            this.x <= p.x &&
+            this.y <= p.y;
     }
 
     public containsRect(rect: IRect) {
-        return this.x + this.width > rect.x &&
-            this.y + this.height > rect.y &&
-            this.x < rect.x + rect.width &&
-            this.y < rect.y + rect.height;
+        return this.x + this.width >= rect.x &&
+            this.y + this.height >= rect.y &&
+            this.x <= rect.x + rect.width &&
+            this.y <= rect.y + rect.height;
     }
 
     public getBoundingRect() {

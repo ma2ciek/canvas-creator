@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "umd",
+        "module": "commonjs",
+        "sourceMap": true,
         "noImplicitAny": true,
         "removeComments": false,
         "experimentalDecorators": true
@@ -10,7 +11,7 @@
         "app/**/*.ts",
         "declarations/**/.ts"        
     ],
-    "files": [
-        "typings/index.d.ts"
+    "exclude": [
+       "node_modules" 
     ]
 }
